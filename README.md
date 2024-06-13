@@ -1,4 +1,4 @@
-# NarratorBot: Transform 
+# NarratorBot: Transform Image to Audio 
 
 A bot that narrates what it sees in front of it, in the style of a BBC nature documentary with the voice of Sir David Attenborough.
 
