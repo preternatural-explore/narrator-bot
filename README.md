@@ -1,10 +1,10 @@
-# NarratorBot: Transform Image to Audio 
+# NarratorBot: Transform Image into Audio 
 
 A bot that narrates what it sees in front of it, in the style of a BBC nature documentary with the voice of Sir David Attenborough.
 
 Uses GPT-4o for image understanding and ElevenLabs for Audio Generation.
 
-https://github.com/PreternaturalAI/NarratorBot/assets/5306992/29be0f4d-1673-4e74-af31-66f21b046008
+https://github.com/preternatural-explore/NarratorBot/blob/main/286146979-29be0f4d-1673-4e74-af31-66f21b046008.mp4
 
 ## Requirements
 - macOS Ventura (macOS Sonoma recommended).
