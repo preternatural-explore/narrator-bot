@@ -1,7 +1,4 @@
-> [!IMPORTANT]
-> Please keep the code within this repository private, it contains hardcoded API credentials for GPT-4V and ElevenLabs.
-
-# NarratorBot
+# NarratorBot: 
 
 A bot that narrates what it sees in front of it, in the style of a BBC nature documentary with the voice of Sir David Attenborough.
 
