@@ -12,6 +12,9 @@ A bot that narrates what it sees in front of it, in the style of a BBC nature do
 - [Usage](#usage)
 - [Key Concepts](#key-concepts)
 - [Preternatural Frameworks](#preternatural-frameworks)
+- [Technical Specifications](#technical-specifications)
+  - [Image-to-Text (Vision) Implementation](#image-to-text-vision-implementation)
+  - [Text-to-Speech (TTS) Implementation](#text-to-speech-tts-implementation)
 - [Acknowledgements](#acknowledgements)
 - [License](#license)
 
@@ -61,6 +64,120 @@ The Narrator app is developed to demonstrate the the following key concepts:
 The following Preternatural Frameworks were used in this project: 
 - [AI](https://github.com/PreternaturalAI/AI): The definitive, open-source Swift framework for interfacing with generative AI.
 - [Media](https://github.com/vmanot/Media): Media makes it stupid simple to work with media capture & playback in Swift.
+
+## Technical Specifications
+Large Language Models (LLMs) are rapidly evolving and expanding into multimodal capabilities - the ability to process inputs in multiple modes, such as text, images, and audio. Multi-modal LLMs are now starting to be referred to as Large Multimodal Models, or LMMs. As Apple Developers, we are in the perfect position for these multimodal AI models as we are making applications for devices that consumers literally use with built-in cameras and voice recorders. With the Vision capabilities of LLMs, it is easier than ever to process images that the user captures in novel ways, such as in this example of NarratorBot. 
+
+### Image-to-Text (Vision) Implementation
+When a user opens NarratorBot, they are prompted via a camera view to capture a photo of themselves. The first step is to send the photo to an LLM and instruct it to describe what is in the photo. This is done in a few simple steps using [Preternatural's AI framework](https://github.com/PreternaturalAI/AI): 
+
+1. Import the AI Framework: 
+```swift
+// LLMManager
+import AI
+```
+2. Specify the LLM client. Currently only OpenAI GPT 4+ models are able to process images (Anthropic will be added as well in the near future). 
+```swift
+private static let llm: any LLMRequestHandling = OpenAI.Client(apiKey: "YOUR_API_KEY")
+```
+3. Specify the LLM Model. Currently only OpenAI's GPT 4+ models support Vision requests:
+```swift
+static let model: OpenAI.Model = .gpt_4o // .gpt_4
+```
+4. The image will be a prompt input for the LLM model. Converting the image (`UIKit` and `NSImage` supported) to an `PromptLiteral` is simple:
+```swift
+let imagePrompt = try PromptLiteral(image: image)
+```
+5. Specify the System Prompt to give the LLM model general instructions.
+```swift
+// TTSManager.narrator.prompt
+let prompt: PromptLiteral =
+  """
+  You are Sir David Attenborough. Follow these instructions:
+  
+  1. Narrate the picture of the human as if it is a nature documentary.
+  2. Make it snarky and funny.
+  3. Don't repeat yourself.
+  4. Make it short.
+  5. If I do anything remotely interesting, make a big deal about it!
+  """
+```
+6. Include the System Prompt, User Prompt, and ImagePrompt as Messages for the LLM:
+```swift
+// LLMManager
+let messages: [AbstractLLM.ChatMessage] = [
+    .system(TTSManager.narrator.prompt),
+    .user {
+        .concatenate(separator: nil) {
+            PromptLiteral("Describe this image") // the user prompt
+            imagePrompt
+        }
+    }
+]
+```
+7. Add any Parameters, such as a Token Limit:
+```swift
+let tokenLimit = 1000
+let parameters = AbstractLLM.ChatCompletionParameters(
+                tokenLimit: .fixed(tokenLimit))
+```
+8. Make the LLM completion request to get the image description in Sir David Attenborough's nature documentary style:
+```swift
+let imageDescription: String = try await llm.complete(
+        messages,
+        parameters: parameters,
+        model: llmModel,
+        as: .string)
+
+return imageDescription
+```
+
+### Text-to-Speech (TTS) Implementation
+Now that we have the text of what Sir David Attenborough would say if he was a picture of a human, we can generate the audio in Sir David Attenborough's voice that [ElevenLabs](https://elevenlabs.io/) provides in their VoiceLab. To do this, we first have to specify the Sir David Attenborough's voice id: 
+
+```swift
+//TTSManager
+var elevenLabsVoice: String {
+    switch self {
+    // future voice implementation
+    case .ericCartman:
+        return "ZvOw3uFB0hlmUg3wjXi6"
+    // ElevenLabs has many voices in the style of David Attenborough
+    // Voices can also be easily cloned
+    // (if you do clone and make a commercial product, make sure you have the concent of the voice actor)
+    case .davidAttenborough:
+        return "17jPwOCwyfZmp68jZqhx"
+    }
+}
+```
+
+To make a speech generation call to the ElevenLabs client using the AI framework, we need to import the `AI` and `ElevenLabs` modules: 
+```swift
+// TTSManager
+import AI
+import ElevenLabs
+```
+
+Next, we specify the client: 
+```swift
+private static let tts: ElevenLabs.Client = .init(apiKey: "YOUR_API_KEY")
+```
+
+Now, simply provide the text to be converted to audio (the image description of the user generated by OpenAI's Vision API) and the audio data will be returned: 
+```swift
+static func createTextNarration(_ text: String) async throws -> Data {
+    let data = try await tts.speech(
+        for: text,
+        voiceID: narrator.elevenLabsVoice,
+        voiceSettings: ElevenLabs.VoiceSettings(),
+        model: .TurboV2
+    )
+    return data
+}
+```
+
+### Conclusion
+While LLMs initially gained popularity in chat mode, they are evolving to offer much more, including the ability to analyze images (and even videos). When combined with powerful models like ElevenLabs' voice generation API, this creates a powerful and versatile toolset for us as developers. The NarratorBot example demonstrates the potential of this technology by combining OpenAI's Image-to-Text (Vision) capabilities with ElevenLabs' Text-to-Speech (voice generation) API to create a dynamic, entertaining narration based on user-captured photos. 
 
 ## Acknowledgements
 
