@@ -132,6 +132,8 @@ let imageDescription: String = try await llm.complete(
 return imageDescription
 ```
 
+You can view the full implementation in `LLMManager`.
+
 ### Text-to-Speech (TTS) Implementation
 Now that we have the text of what Sir David Attenborough would say if he was a picture of a human, we can generate the audio in Sir David Attenborough's voice that [ElevenLabs](https://elevenlabs.io/) provides in their VoiceLab. To do this, we first have to specify the Sir David Attenborough's voice id: 
 
@@ -175,6 +177,8 @@ static func createTextNarration(_ text: String) async throws -> Data {
     return data
 }
 ```
+
+You can view the full implementation in `TTSManager`.
 
 ### Conclusion
 While LLMs initially gained popularity in chat mode, they are evolving to offer much more, including the ability to analyze images (and even videos). When combined with powerful models like ElevenLabs' voice generation API, this creates a powerful and versatile toolset for us as developers. The NarratorBot example demonstrates the potential of this technology by combining OpenAI's Image-to-Text (Vision) capabilities with ElevenLabs' Text-to-Speech (voice generation) API to create a dynamic, entertaining narration based on user-captured photos. 
