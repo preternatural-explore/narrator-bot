@@ -48,7 +48,8 @@ private static let tts: ElevenLabs.Client = .init(apiKey: "YOUR_API_KEY")
 6. Click run again.
 
 Upon successful installation, enjoy the app!<br/>
-https://github.com/preternatural-explore/NarratorBot/blob/main/286146979-29be0f4d-1673-4e74-af31-66f21b046008.mp4
+
+https://github.com/preternatural-explore/narrator-bot/blob/main/286146979-29be0f4d-1673-4e74-af31-66f21b046008.mp4
 
 ## Key Concepts
 The Narrator app is developed to demonstrate the the following key concepts:
