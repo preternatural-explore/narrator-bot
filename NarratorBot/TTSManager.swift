@@ -55,7 +55,7 @@ extension TTSManager {
             case .ericCartman:
                 return "ZvOw3uFB0hlmUg3wjXi6"
             case .davidAttenborough:
-                return "17jPwOCwyfZmp68jZqhx"
+                return "6yupTtqMaJQKM9ECH0eM"
             }
         }
     }
