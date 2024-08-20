@@ -60,12 +60,12 @@ struct ContentView: View {
     
     struct CaptureButton: View {
         let camera: CameraViewProxy
-        let onCapture: (AppKitOrUIKitImage) -> Void
+        let onCapture: (_AnyImage) -> Void
         
         var body: some View {
             /// Take a screenshot using the camera, and queue up a `NarrationTask`.
             TaskButton {
-                let image: AppKitOrUIKitImage = try! await camera.capturePhoto()
+                let image = try! await _AnyImage(camera.capturePhoto())
                 
                 onCapture(image)
             } label: {

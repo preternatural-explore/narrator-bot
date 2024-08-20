@@ -10,7 +10,7 @@ struct LLMManager {
     private static let llmModel = OpenAI.Model.gpt_4o
     private static let tokenLimit = 1000
     
-    static func describeImage(image: AppKitOrUIKitImage) async throws -> String {
+    static func describeImage(image: _AnyImage) async throws -> String {
             let imagePrompt = try PromptLiteral(image: image)
             
             let messages: [AbstractLLM.ChatMessage] = [

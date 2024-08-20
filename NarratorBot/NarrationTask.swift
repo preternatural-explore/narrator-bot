@@ -12,23 +12,23 @@ class NarrationTask: Identifiable, ObservableObject {
     private static let queue = TaskQueue()
     
     /// The state of this task.
-    public enum State: Hashable {
+    public enum State: Codable, Hashable, Sendable {
         case queued
         case inProgress
         case complete
-        case failed(AnyError)
+        case failed(String)
     }
 
-    let id = UUID()
+    public var id: UUID = UUID()
 
     /// The image to create a narration for.
-    let image: AppKitOrUIKitImage
+    let image: _AnyImage
     /// The state of the task.
     @Published private(set) var state: State = .queued
     
     private var audioPlayer: AVPlayer?
     
-    init(image: AppKitOrUIKitImage) {
+    init(image: _AnyImage) {
         self.image = image
         
         Self.queue.addTask { @MainActor in
@@ -41,7 +41,7 @@ class NarrationTask: Identifiable, ObservableObject {
                 
                 self.state = .complete
             } catch {
-                self.state = .failed(AnyError(erasing: error))
+                self.state = .failed(String(describing: error))
             }
         }
     }

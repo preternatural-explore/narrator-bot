@@ -25,7 +25,7 @@ struct TTSManager {
 
 extension TTSManager {
     /// The persona we want for our narrator.
-    public enum NarratorPersona {
+    public enum NarratorPersona: Codable, Hashable, Sendable {
         case ericCartman
         case davidAttenborough
         
